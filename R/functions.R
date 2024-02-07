@@ -1,15 +1,3 @@
-# dependencies:
-library(coxme)
-library(bigsnpr)
-library(RSQLite)
-library(seqminer)
-
-#
-#
-#           Functions to be included in the SPARE package
-#
-#
-
 MGres_ph =  function (fitph = NULL, data = NULL)   {
   if (is.null(fitph)) stop("no coxph object included")
   if (!"coxph" %in% class(fitph)) stop("object not of class coxph")
@@ -152,7 +140,7 @@ Null_model <- function(fitme,
   obj.check = check_input(data, IDs, mresid, range)
 
   ### Calculate empirical CGF for martingale residuals
-  idx0 = qcauchy(1:length.out/(length.out+1))
+  idx0 = stats::qcauchy(1:length.out/(length.out+1))
   idx1 = idx0 * max(range) / max(idx0)
 
   cumul = NULL
@@ -172,9 +160,9 @@ Null_model <- function(fitme,
     if(c %% 5000 == 0) print(paste0("Complete ",c,"/",length.out,"."))
   }
 
-  K_org_emp = approxfun(cumul[,1], cumul[,2], rule=2)
-  K_1_emp = approxfun(cumul[,1], cumul[,3], rule=2)
-  K_2_emp = approxfun(cumul[,1], cumul[,4], rule=2)
+  K_org_emp = stats::approxfun(cumul[,1], cumul[,2], rule=2)
+  K_1_emp = stats::approxfun(cumul[,1], cumul[,3], rule=2)
+  K_2_emp = stats::approxfun(cumul[,1], cumul[,4], rule=2)
 
   re = list(resid = mresid, cumhaz = cumhaz, frail = frail, K_org_emp = K_org_emp, K_1_emp = K_1_emp,
             K_2_emp = K_2_emp, Call = Call, IDs = IDs)
@@ -194,7 +182,7 @@ SPARE = function(obj.null,
                  p.cutoff = 0.001)
 {
   par.list = list(pwd=getwd(),
-                  sessionInfo=sessionInfo(),
+                  sessionInfo=utils::sessionInfo(),
                   missing.cutoff=missing.cutoff,
                   min.maf=min.maf)
 
@@ -255,7 +243,7 @@ SPARE = function(obj.null,
   RSS = crossprod(Y^2, !No_Geno) - b ^ 2 * S_sq
   sigma_hat = RSS/(n - 2)
   error = sqrt(sigma_hat/ S_sq)
-  pval.mg = as.numeric(2 * pnorm(-abs (b / error)))
+  pval.mg = as.numeric(2 * stats::pnorm(-abs (b / error)))
 
   ### Prepare the output file
   b = as.numeric(b); error = as.numeric(error)
@@ -292,10 +280,10 @@ SPARE = function(obj.null,
 
       zeta <- tryCatch(
         # First try domain (-2000,2000), then (-20000,20000), otherwise return p values NA
-        uniroot(k1_root, c(-2000, 2000))$root,
+        stats::uniroot(k1_root, c(-2000, 2000))$root,
         error = function(e) {
           result <- tryCatch(
-            uniroot(k1_root, c(-20000, 20000))$root,
+            stats::uniroot(k1_root, c(-20000, 20000))$root,
             error = function(e2) {
               # Set zeta to NA
               NA
@@ -307,7 +295,7 @@ SPARE = function(obj.null,
 
       w = sign(zeta) * sqrt(2 * (zeta * s - k0(zeta)))
       v = zeta * sqrt(k2(zeta))
-      pval = pnorm(w + 1/w * log(v/w), lower.tail = tail)
+      pval = stats::pnorm(w + 1/w * log(v/w), lower.tail = tail)
       return(pval)
 
     }
@@ -318,7 +306,7 @@ SPARE = function(obj.null,
   # Compute SPA - corrected standard errors. Effects have to be slightly way from the null to avoid dividing by 0
   SNP_set = which(outcome$pMG < 0.75)
   SE2 = outcome$SE
-  SE2[SNP_set] = sqrt(outcome$Beta[SNP_set]^2 / qchisq(outcome$pSPA[SNP_set],df=1, lower.tail = F))
+  SE2[SNP_set] = sqrt(outcome$Beta[SNP_set]^2 / stats::qchisq(outcome$pSPA[SNP_set],df=1, lower.tail = F))
 
   # Compute (SPA - corrected) standard errors for the approximate HRs
   log_HR_approx_SE = outcome$SE * (outcome$log_HR_approx / outcome$Beta)
@@ -391,10 +379,10 @@ SPARE.bgen <- function(bgenfile, gIDs,
     backfile = paste0(getwd(),'/',backingdir,'/',backingfile,'_',chr,'_',r)
 
     snps = list(); snps[[1]] = infos$myid[indices]         # The names of the SNPs in this chunk
-    bgen = snp_readBGEN(bgenfiles = bgenfile, list_snp_id = snps, backingfile = backfile, ncores = 1)
+    bgen = bigsnpr::snp_readBGEN(bgenfiles = bgenfile, list_snp_id = snps, backingfile = backfile, ncores = 1)
 
     file = paste0(backfile,'.rds')
-    genotype <- snp_attach(file)
+    genotype <- bigsnpr::snp_attach(file)
     G <- genotype$genotypes
 
     Geno.mtx = G[,]
@@ -456,8 +444,8 @@ SPARE.bed <- function(bedfile, gIDs,
   if(!file.exists(fam.file)) stop("Could not find paste0(bedfile,'.fam')")
   if(is.null(output.file)) stop('please provide name of output file')
 
-  fam.data = read.table(fam.file, stringsAsFactors = F)
-  bim.data = read.table(bim.file, stringsAsFactors = F)
+  fam.data = utils::read.table(fam.file, stringsAsFactors = F)
+  bim.data = utils::read.table(bim.file, stringsAsFactors = F)
 
   N = nrow(fam.data)
   M = nrow(bim.data)

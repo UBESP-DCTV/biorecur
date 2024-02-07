@@ -7,14 +7,22 @@ Authors@R:
 Description: What the package does (one paragraph).
 License: file LICENSE
 Imports: 
-    crew,
+    bigsnpr,
+    data.table,
+    dplyr,
     fs,
     purrr,
     readr,
-    stringr
+    RSQLite,
+    seqminer,
+    stats,
+    stringr,
+    utils
 Suggests: 
     checkmate,
     covr,
+    coxme,
+    crew,
     devtools,
     distill,
     here,
