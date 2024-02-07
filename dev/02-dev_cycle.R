@@ -34,4 +34,4 @@ renv::status()
 ## by running the following lines of code as needed.
 
 # usethis::use_test("<my_fun>")
-# usethis::use_r(<"my_fun">)
+# usethis::use_r("<my_fun>")
