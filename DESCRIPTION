@@ -32,6 +32,7 @@ Suggests:
     qs,
     rstudioapi,
     spelling,
+    styler,
     tarchetypes,
     targets,
     testthat (>= 3.0.0),

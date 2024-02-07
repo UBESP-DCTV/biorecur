@@ -21,7 +21,7 @@ dev_pkgs <- c(
   "checkmate", "covr", "devtools", "distill", "fs", "here", "htmltools",
   "knitr", "lintr", "purrr", "qs", "rstudioapi", "spelling",
   "stringr", "targets", "tarchetypes", "testthat", "usethis", "withr",
-  "crew", "coxme"
+  "crew", "coxme", "styler"
 )
 renv::install(dev_pkgs)
 purrr::walk(dev_pkgs, usethis::use_package, type = "Suggests")
