@@ -3,7 +3,7 @@
 meta_pkgs <- c()  # e.g., tidyverse, tidymodels, ...
 renv::install(meta_pkgs)
 
-prj_pkgs <- c("fs", "readr", "stringr", "purrr")
+prj_pkgs <- c("fs", "readr", "stringr", "purrr", "crew")
 renv::install(prj_pkgs)
 purrr::walk(prj_pkgs, usethis::use_package)
 
