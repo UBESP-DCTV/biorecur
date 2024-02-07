@@ -33,6 +33,7 @@ Suggests:
     rstudioapi,
     spelling,
     styler,
+    survival,
     tarchetypes,
     targets,
     testthat (>= 3.0.0),

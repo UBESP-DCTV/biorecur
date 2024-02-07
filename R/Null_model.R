@@ -1,8 +1,48 @@
-Null_model <- function(fitme,
-                       data,
-                       IDs = NULL,
-                       range = c(-20, 20),
-                       length.out = 50000) {
+#' null_model
+#'
+#' @param fitme (coxme) frailty survival model
+#' @param data (data.frame) clinical characteristics, with a mandatory
+#'   column `subject` reporting subjects' IDs.
+#' @param IDs (chr, default = NULL) character vector of unique IDs
+#'   reported in the column `subject` of `data`. If NULL (default) an
+#'   error will be thrown.
+#' @param range (num, default = c(-20, 20)) reference symmetric interval
+#'   for martingale in the form `c(-n, n)`.
+#' @param length.out (int, default = 50000) number of iterations for the
+#'   martingale.
+#' @param seed (int, default = 42) seed for the simulation
+#'
+#' @return (null_model) the null model containing the formatted
+#'   parameters coming from the `{coxme}` model.
+#' @export
+#'
+#' @examples
+#' library(coxme)
+#'
+#' db <- eortc
+#' db[["subject"]] <- seq_len(nrow(db))
+#'
+#' fitme <- coxme(
+#'   Surv(y, uncens) ~ trt + (1|center),
+#'   db
+#' )
+#' nm <- null_model(
+#'   fitme = fitme,
+#'   data = db,
+#'   IDs = db[["subject"]],
+#'   range = c(-10, 10),
+#'   length.out = 5000
+#' )
+#' str(nm, 1)
+null_model <- function(
+    fitme,
+    data,
+    IDs = NULL,
+    range = c(-20, 20),
+    length.out = 50000,
+    seed = 42
+) {
+  set.seed(seed)
   Call <- match.call()
 
   # Compute martingale residuals and cumulative hazards
@@ -47,21 +87,15 @@ Null_model <- function(fitme,
     }
   }
 
-  K_org_emp <- stats::approxfun(cumul[, 1], cumul[, 2], rule = 2)
-  K_1_emp <- stats::approxfun(cumul[, 1], cumul[, 3], rule = 2)
-  K_2_emp <- stats::approxfun(cumul[, 1], cumul[, 4], rule = 2)
-
   structure(
     list(
       resid = mresid,
       cumhaz = cumhaz,
       frail = frail,
-      K_org_emp = K_org_emp,
-      K_1_emp = K_1_emp,
-      K_2_emp = K_2_emp,
+      cumul = cumul,
       Call = Call,
       IDs = IDs
     ),
-    class = "NULL_Model"
+    class = "null_model"
   )
 }

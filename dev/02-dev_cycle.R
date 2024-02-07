@@ -4,7 +4,7 @@ meta_pkgs <- c()  # e.g., tidyverse, tidymodels, ...
 renv::install(meta_pkgs)
 
 prj_pkgs <- c(
-  "fs", "readr", "stringr", "purrr", "coxme", "bigsnpr",
+  "fs", "readr", "stringr", "purrr", "bigsnpr",
   "RSQLite", "seqminer", "dplyr", "data.table", "stats", "utils"
 )
 renv::install(prj_pkgs)
@@ -21,7 +21,7 @@ dev_pkgs <- c(
   "checkmate", "covr", "devtools", "distill", "fs", "here", "htmltools",
   "knitr", "lintr", "purrr", "qs", "rstudioapi", "spelling",
   "stringr", "targets", "tarchetypes", "testthat", "usethis", "withr",
-  "crew", "coxme", "styler"
+  "crew", "coxme", "styler", "survival"
 )
 renv::install(dev_pkgs)
 purrr::walk(dev_pkgs, usethis::use_package, type = "Suggests")
@@ -39,7 +39,7 @@ renv::snapshot()
 
 .use_r("MGres_ph")
 .use_r("MGres")
-.use_r("Null_model")
+.use_r("null_model")
 .use_r("SPARE")
 .use_r("SPARE-bgen")
 .use_r("SPARE-bed")

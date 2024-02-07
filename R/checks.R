@@ -1,6 +1,6 @@
 check_input_SPARE <- function(obj.null, Geno.mtx, par.list) {
-  if (!inherits(obj.null, "NULL_Model")) {
-    stop("obj.null should be a returned outcome from 'Null_model'")
+  if (!inherits(obj.null, "null_model")) {
+    stop("obj.null should be a returned outcome from 'null_model'")
   }
 
   if (is.null(rownames(Geno.mtx))) {

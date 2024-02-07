@@ -1,12 +1,15 @@
-SPARE.bed <- function(bedfile, gIDs,
-                      obj.null,
-                      output.file = NULL,
-                      chr = NULL,
-                      missing.cutoff = 0.05,
-                      min.maf = 0.05,
-                      p.cutoff = 0.001,
-                      memory = 512,
-                      maxchunksize = 5e4) {
+SPARE.bed <- function(
+  bedfile,
+  gIDs,
+  obj.null,
+  output.file = NULL,
+  chr = NULL,
+  missing.cutoff = 0.05,
+  min.maf = 0.05,
+  p.cutoff = 0.001,
+  memory = 512,
+  maxchunksize = 5e4
+) {
   bim.file <- paste0(bedfile, ".bim")
   fam.file <- paste0(bedfile, ".fam")
   bed.file <- paste0(bedfile, ".bed")

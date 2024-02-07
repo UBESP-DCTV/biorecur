@@ -1,8 +1,10 @@
-SPARE <- function(obj.null,
-                  Geno.mtx,
-                  missing.cutoff = 0.05,
-                  min.maf = 0.05,
-                  p.cutoff = 0.001) {
+SPARE <- function(
+  obj.null,
+  Geno.mtx,
+  missing.cutoff = 0.05,
+  min.maf = 0.05,
+  p.cutoff = 0.001
+) {
   par.list <- list(
     pwd = getwd(),
     sessionInfo = utils::sessionInfo(),
@@ -133,13 +135,13 @@ SPARE <- function(obj.null,
     g <- g - mean(g)
     s <- sum(g * MG) / sum(g^2)
     k0 <- function(x) {
-      sum(obj.null$K_org_emp(g / sum(g^2) * x))
+      sum(k_emp(obj.null, g, x, "org"))
     }
     k1 <- function(x) {
-      sum(g / sum(g^2) * obj.null$K_1_emp(g / sum(g^2) * x))
+      sum(g / sum(g^2) * k_emp(obj.null, g, x, "1"))
     }
     k2 <- function(x) {
-      sum((g / sum(g^2))^2 * obj.null$K_2_emp(g / sum(g^2) * x))
+      sum((g / sum(g^2))^2 * k_emp(obj.null, g, x, "2"))
     }
     get_p <- function(s, tail) {
       k1_root <- function(x) k1(x) - s
@@ -189,4 +191,18 @@ SPARE <- function(obj.null,
 
   print(paste0("SPARE completed at ", Sys.time()))
   outcome
+}
+
+
+k_emp <- function(null_model, g, x, y = c("org", "1", "2")) {
+  y <- match.arg(y)
+  y <- switch(y,
+    "org" = 2,
+    "1" = 3,
+    "2" = 4
+  )
+  cumul <- null_model[["cumul"]]
+  f <- stats::approxfun(cumul[, 1], cumul[, y], rule = 2)
+  f(g / sum(g^2) * x)
+
 }
