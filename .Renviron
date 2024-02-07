@@ -4,13 +4,13 @@ PATH="${RTOOLS40_HOME}\usr\bin;${PATH}"
 ATTACH_STARTUP_PKGS=TRUE
 
 # Project's information: ONE SINGLE LINE EACH (no line brakes!!)
-PROJ_TITLE="Project's Title"
-PROJ_DESCRIPTION="Project's description."
-PROJ_URL="https://github.com/UBESP-DCTV/laims.analysis"
+PROJ_TITLE="biorecur"
+PROJ_DESCRIPTION="An R package to implement marginalized mixed and SPARE models on GWAS data."
+PROJ_URL="https://github.com/UBESP-DCTV/biorecur"
 
 # Shared folders local locations
 # PATH should be a proper path (C:\\...)
-PRJ_SHARED_PATH=""
+PRJ_SHARED_PATH="C:\\Users\\Luca\\Unit of Biostatistics Epidemiology and Public Health\\LeSEXP - biorecur"
 # FOLDER shoud be only the name on the folder (and not the full path to that folder)
-INPUT_DATA_FOLDER="data-raw"
+INPUT_DATA_FOLDER="data_raw"
 OUTPUT_DATA_FOLDER="output"

@@ -1,3 +1,4 @@
+## devtools::build_readme()
 spelling::spell_check_package()
 ## spelling::update_wordlist()
 lintr::lint_package()
