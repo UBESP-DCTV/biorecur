@@ -3,7 +3,10 @@
 meta_pkgs <- c()  # e.g., tidyverse, tidymodels, ...
 renv::install(meta_pkgs)
 
-prj_pkgs <- c("fs", "readr", "stringr", "purrr", "crew")
+prj_pkgs <- c(
+  "fs", "readr", "stringr", "purrr", "crew", "coxme", "bigsnpr",
+  "RSQLite", "seqminer"
+)
 renv::install(prj_pkgs)
 purrr::walk(prj_pkgs, usethis::use_package)
 
@@ -24,8 +27,8 @@ purrr::walk(dev_pkgs, usethis::use_package, type = "Suggests")
 
 usethis::use_tidy_description()
 devtools::document()
-renv::status()
-# renv::snapshot()
+# renv::status()
+renv::snapshot()
 
 # Functions definitions -------------------------------------------
 
