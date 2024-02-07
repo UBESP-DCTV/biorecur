@@ -2,6 +2,7 @@ source("renv/activate.R")
 
 options(tidyverse.quiet = TRUE)
 
+
 stopifnot(
   `env var "PROJ_TITLE" must be set` = Sys.getenv("PROJ_TITLE") != "",
   `env var "PROJ_DESCRIPTION" must be set` =
@@ -24,6 +25,11 @@ if (interactive()) {
       library(testthat)
       ui_done("Library {ui_value('testthat')} attached.")
     }))
+
+    .use_r <- function(f_name) {
+      usethis::use_r(f_name)
+      usethis::use_test(f_name)
+    }
   }
 
   if (

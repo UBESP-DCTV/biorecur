@@ -37,5 +37,13 @@ renv::snapshot()
 ## `R/functions.R`, you can create other couple of test/function-script
 ## by running the following lines of code as needed.
 
-# usethis::use_test("<my_fun>")
-# usethis::use_r("<my_fun>")
+.use_r("MGres_ph")
+.use_r("MGres")
+.use_r("Null_model")
+.use_r("SPARE")
+.use_r("SPARE-bgen")
+.use_r("SPARE-bed")
+.use_r("checks")
+.use_r("Beta_to_HR")
+.use_r("na_mean")
+
