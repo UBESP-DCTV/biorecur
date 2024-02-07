@@ -14,7 +14,7 @@ MGres_ph <- function(fitph = NULL, data = NULL) {
   mgres <- mgres[match(unique(data$subject), rownames(mgres)), ]
 
   count <- rep(0, length(unique(data$subject)))
-  for (i in 1:length(count)) {
+  for (i in seq_along(count)) {
     count[i] <- sum(
       as.data.frame(as.matrix(fitph$y))$status[
         which(data$subject == unique(data$subject)[i])
@@ -68,7 +68,7 @@ MGres <- function(fitme = NULL, data = NULL) {
       colnames(basehaz) <- c("Haz", "Time")
       eventtimes <- events$stop
 
-      for (i in 1:length(unique(events$stop))) {
+      for (i in seq_along(unique(events$stop))) {
         time <- basehaz$Time[i]
         risk.set <- which(
           events$start < time &
@@ -76,8 +76,9 @@ MGres <- function(fitme = NULL, data = NULL) {
             strats == strat
         )
         denom <- sum(exp(fitme$linear.predictor[risk.set]))
-        nom <- sum(events$stop == time & events$status ==
-          1 & strats == strat)
+        nom <- sum(
+          events$stop == time & events$status == 1 & strats == strat
+        )
         basehaz$Haz[i] <- nom / denom
       }
     } else {
@@ -87,7 +88,7 @@ MGres <- function(fitme = NULL, data = NULL) {
       ))
       colnames(basehaz) <- c("Haz", "Time")
       eventtimes <- events$time
-      for (i in 1:length(unique(events$time))) {
+      for (i in seq_along(unique(events$time))) {
         time <- basehaz$Time[i]
         risk.set <- which(events$time >= time & strats == strat)
         denom <- sum(exp(fitme$linear.predictor[risk.set]))
@@ -102,16 +103,18 @@ MGres <- function(fitme = NULL, data = NULL) {
 
     ### Compute individual cumulative hazards from baseline hazard and
     ### linear predictor
-    for (i in 1:length(unique(data$subject))) {
+    for (i in seq_along(unique(data$subject))) {
       rows <- which(
         data$subject == unique(data$subject)[i] &
           strats == strat
       )
       if (length(rows) > 0) {
-        for (r in 1:length(rows)) {
+        for (r in seq_along(rows)) {
           if (dim(events)[2] > 2) {
-            haz <- sum(basehaz$Haz[which(events$start[rows[r]] <
-              basehaz$Time & basehaz$Time <= events$stop[rows[r]])])
+            haz <- sum(basehaz$Haz[which(
+              events$start[rows[r]] < basehaz$Time &
+                basehaz$Time <= events$stop[rows[r]]
+            )])
             cumhaz[i] <- cumhaz[i] +
               haz * exp(fitme$linear.predictor[rows[r]])
           } else {
@@ -127,7 +130,7 @@ MGres <- function(fitme = NULL, data = NULL) {
   }
   individual_prop_haz <- rep(0, length(unique(data$subject)))
   count <- rep(0, length(unique(data$subject)))
-  for (i in 1:length(unique(data$subject))) {
+  for (i in seq_along(unique(data$subject))) {
     set <- which(data$subject == unique(data$subject)[i])
     count[i] <- sum(events$status[set] == 1)
   }
@@ -174,7 +177,7 @@ Null_model <- function(fitme,
   obj.check <- check_input(data, IDs, mresid, range)
 
   ### Calculate empirical CGF for martingale residuals
-  idx0 <- stats::qcauchy(1:length.out / (length.out + 1))
+  idx0 <- stats::qcauchy(seq_len(length.out) / (length.out + 1))
   idx1 <- idx0 * max(range) / max(idx0)
 
   cumul <- NULL
@@ -269,18 +272,14 @@ SPARE <- function(obj.null,
     Sys.time()
   ))
 
-  G <- Geno.mtx[,
-                which(
-                  colMeans(Geno.mtx) > 2 * min.maf &
-                    colMeans(Geno.mtx) < 2 * (1 - min.maf)
-                )
-  ]
-  No_Geno <- No_Geno[,
-                     which(
-                       colMeans(Geno.mtx) > 2 * min.maf &
-                         colMeans(Geno.mtx) < 2 * (1 - min.maf)
-                      )
-  ] # Also update the No_geno matrix
+  G <- Geno.mtx[, which(
+    colMeans(Geno.mtx) > 2 * min.maf &
+      colMeans(Geno.mtx) < 2 * (1 - min.maf)
+  )]
+  No_Geno <- No_Geno[, which(
+    colMeans(Geno.mtx) > 2 * min.maf &
+      colMeans(Geno.mtx) < 2 * (1 - min.maf)
+  )] # Also update the No_geno matrix
 
   if (is.null(dim(G))) {
     return(NULL)
@@ -320,7 +319,7 @@ SPARE <- function(obj.null,
 
   # Compute approximate Hazard Ratio
   HR <- rep(NA, length(b))
-  for (i in 1:length(HR)) {
+  for (i in seq_along(HR)) {
     HR[i] <- Beta_to_HR(
       b[i], G[, i], mresid, obj.null$cumhaz, obj.null$frail
     )
@@ -358,16 +357,13 @@ SPARE <- function(obj.null,
     g <- g - mean(g)
     s <- sum(g * MG) / sum(g^2)
     k0 <- function(x) {
-      sum(obj.null$K_org_emp(g / sum(g^2) *
-        x))
+      sum(obj.null$K_org_emp(g / sum(g^2) * x))
     }
     k1 <- function(x) {
-      sum(g / sum(g^2) * obj.null$K_1_emp(g / sum(g^2) *
-        x))
+      sum(g / sum(g^2) * obj.null$K_1_emp(g / sum(g^2) * x))
     }
     k2 <- function(x) {
-      sum((g / sum(g^2))^2 * obj.null$K_2_emp(g / sum(g^2) *
-        x))
+      sum((g / sum(g^2))^2 * obj.null$K_2_emp(g / sum(g^2) * x))
     }
     get_p <- function(s, tail) {
       k1_root <- function(x) k1(x) - s
@@ -394,7 +390,7 @@ SPARE <- function(obj.null,
       pval <- stats::pnorm(w + 1 / w * log(v / w), lower.tail = tail)
       return(pval)
     }
-    p_SPA <- get_p(abs(s), tail = F) + get_p(-abs(s), tail = T)
+    p_SPA <- get_p(abs(s), tail = FALSE) + get_p(-abs(s), tail = TRUE)
     outcome$pSPA[i] <- p_SPA
   }
 
@@ -591,8 +587,8 @@ SPARE.bed <- function(bedfile, gIDs,
     stop("please provide name of output file")
   }
 
-  fam.data <- utils::read.table(fam.file, stringsAsFactors = F)
-  bim.data <- utils::read.table(bim.file, stringsAsFactors = F)
+  fam.data <- utils::read.table(fam.file, stringsAsFactors = FALSE)
+  bim.data <- utils::read.table(bim.file, stringsAsFactors = FALSE)
 
   N <- nrow(fam.data)
   M <- nrow(bim.data)
@@ -687,7 +683,7 @@ SPARE.bed <- function(bedfile, gIDs,
 #
 
 check_input_SPARE <- function(obj.null, Geno.mtx, par.list) {
-  if (class(obj.null) != "NULL_Model") {
+  if (!inherits(obj.null, "NULL_Model")) {
     stop("obj.null should be a returned outcome from 'Null_model'")
   }
 
@@ -712,8 +708,8 @@ check_input_SPARE <- function(obj.null, Geno.mtx, par.list) {
 
   if (
     !is.numeric(par.list$min.maf) |
-    par.list$min.maf < 0 |
-    par.list$min.maf > 0.5
+      par.list$min.maf < 0 |
+      par.list$min.maf > 0.5
   ) {
     stop(
       "Argument 'min.maf' should be a numeric value >= 0 and <= 0.5."
@@ -721,8 +717,8 @@ check_input_SPARE <- function(obj.null, Geno.mtx, par.list) {
   }
   if (
     !is.numeric(par.list$missing.cutoff) |
-    par.list$missing.cutoff < 0 |
-    par.list$missing.cutoff > 1
+      par.list$missing.cutoff < 0 |
+      par.list$missing.cutoff > 1
   ) {
     stop(paste0(
       "Argument 'missing.cutoff' should be a numeric value ",
@@ -773,13 +769,13 @@ MGres_check <- function(fitme, data) {
   if (is.null(fitme)) {
     stop("no coxme object included")
   }
-  if (class(fitme) != "coxme") {
+  if (!inherits(fitme, "coxme")) {
     stop("object not of class coxme")
   }
   if (is.null(data)) {
     stop("no data object included")
   }
-  if (class(data) != "data.frame") {
+  if (!inherits(data, "data.frame")) {
     stop("data is not a data frame object")
   }
   if (!"subject" %in% colnames(data)) {
@@ -826,7 +822,7 @@ Beta_to_HR <- function(beta, g, resids, cumhaz, frail) {
 na_mean <- function(x, option = "mean", maxgap = Inf) {
   data <- x
   if (!is.null(dim(data)[2]) && dim(data)[2] > 1) {
-    for (i in 1:dim(data)[2]) {
+    for (i in seq_len(dim(data)[2])) {
       if (!anyNA(data[, i])) {
         next
       }
