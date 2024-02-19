@@ -77,8 +77,14 @@ check_input <- function(data, IDs, mresid, range) {
 
 
 
-
+#' @export
 mgres_check <- function(fitme, data) {
+  UseMethod("mgres_check", fitme)
+}
+
+
+#' @export
+mgres_check.coxme <- function(fitme, data) {
   if (is.null(fitme)) {
     stop("no coxme object included")
   }
@@ -99,6 +105,8 @@ mgres_check <- function(fitme, data) {
     as.character(fitme$formulaList$fixed)[3],
     "strata"
   )[[1]]
+
+
   if (length(check_strat) > 2) {
     stop("do not include stratum/covariates with name strata")
   }
@@ -107,13 +115,26 @@ mgres_check <- function(fitme, data) {
   if (length(check_strat) > 1) {
     name <- substring(strsplit(check_strat[2], ")")[[1]][1], 2)
 
-    strats <- data[, which(colnames(data) == name)]
+    strats <- data[, colnames(data) == name]
     try(
       if (length(strats) != dim(data)[1]) {
         stop("please include the strata once in the data frame")
       }
     )
-  } else {
-    strats <- rep(0, dim(data)[1])
   }
+}
+
+
+#' @export
+mgres_check.coxph <- function(fitme, data) {
+  if (is.null(fitme)) stop("no coxph object included")
+  if (!"coxph" %in% class(fitme)) stop("object not of class coxph")
+  if (is.null(data)) stop("no data object included")
+  if (!"subject" %in% colnames(data)) {
+    stop("please include individuals as \"subject\" in dataframe")
+  }
+  if (length(grep("subject", attr(fitme$terms, "term.labels"))) < 1) {
+    warning("subject not included as frailty")
+  }
+
 }

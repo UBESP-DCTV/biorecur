@@ -16,11 +16,10 @@ mgres.coxme <- function(fitme = NULL, data = NULL) {
   )[[1]]
 
   if (length(check_strat) > 1) {
-    name <- substring(
-      strsplit(check_strat[2], ")")[[1]][1],
-      2
-    )
-    strats <- data[, which(colnames(data) == name)]
+    name <- strsplit(check_strat[2], ")")[[1]][1] |>
+      substring(2)
+
+    strats <- data[, colnames(data) == name]
   } else {
     strats <- rep(0, dim(data)[1])
   }
@@ -30,16 +29,18 @@ mgres.coxme <- function(fitme = NULL, data = NULL) {
 
   ### Compute baseline hazards for all strata
   events <- as.data.frame(as.matrix(fitme$y))
+
   for (strat in strat_list) {
-    in_strat <- which(strats == strat)
 
     ### Distinguish models where 'start' time of risk interval is
     ### specified
     if (dim(events)[2] > 2) {
-      basehaz <- as.data.frame(cbind(
+      basehaz <- cbind(
         rep(0, length = length(unique(events$stop))),
         unique(events$stop)
-      ))
+      ) |>
+        as.data.frame()
+
       colnames(basehaz) <- c("Haz", "Time")
       eventtimes <- events$stop
 
@@ -125,15 +126,8 @@ mgres.coxme <- function(fitme = NULL, data = NULL) {
 
 #' @export
 mgres.coxph <- function(fitph = NULL, data = NULL) {
-  if (is.null(fitph)) stop("no coxph object included")
-  if (!"coxph" %in% class(fitph)) stop("object not of class coxph")
-  if (is.null(data)) stop("no data object included")
-  if (!"subject" %in% colnames(data)) {
-    stop("please include individuals as \"subject\" in dataframe")
-  }
-  if (length(grep("subject", attr(fitph$terms, "term.labels"))) < 1) {
-    warning("subject not included as frailty")
-  }
+
+  mgres_check(fitph, data)
 
   if (!is.null(fitph$na.action)) data <- data[-fitph$na.action, ]
   mgres <- rowsum(fitph$residuals, data$subject)

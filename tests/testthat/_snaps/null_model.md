@@ -1952,7 +1952,7 @@
       null_model(fitme = fitme, data = db, IDs = db[["subject"]], range = c(-1, 1),
       length.out = 50)
     Condition
-      Warning in `mgres.coxph()`:
+      Warning in `mgres_check.coxph()`:
       subject not included as frailty
     Output
       [1] "Compute empirical CGF for martingale residuals..."

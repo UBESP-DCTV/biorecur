@@ -1722,7 +1722,7 @@
     Code
       mgres(fitme_coxph, db)
     Condition
-      Warning in `mgres.coxph()`:
+      Warning in `mgres_check.coxph()`:
       subject not included as frailty
     Output
       $resids
