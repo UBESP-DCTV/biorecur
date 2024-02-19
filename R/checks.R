@@ -100,28 +100,6 @@ mgres_check.coxme <- function(fitme, data) {
   if (!"subject" %in% colnames(data)) {
     stop('please include individuals as "subject" in dataframe')
   }
-
-  check_strat <- strsplit(
-    as.character(fitme$formulaList$fixed)[3],
-    "strata"
-  )[[1]]
-
-
-  if (length(check_strat) > 2) {
-    stop("do not include stratum/covariates with name strata")
-  }
-
-  # In this case, strata have been specified..
-  if (length(check_strat) > 1) {
-    name <- substring(strsplit(check_strat[2], ")")[[1]][1], 2)
-
-    strats <- data[, colnames(data) == name]
-    try(
-      if (length(strats) != dim(data)[1]) {
-        stop("please include the strata once in the data frame")
-      }
-    )
-  }
 }
 
 
@@ -137,4 +115,12 @@ mgres_check.coxph <- function(fitme, data) {
     warning("subject not included as frailty")
   }
 
+}
+
+mgres_check.default <- function(fitme, data) {
+  usethis::ui_stop(stringr::str_c(
+    "{usethis::ui_code('mgres_check')} not yet implemented for model ",
+    "of class:
+    {usethis::ui_value(stringr::str_c(class(fitme), collapse = '/'))}."
+  ))
 }

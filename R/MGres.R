@@ -10,19 +10,7 @@ mgres.coxme <- function(fitme = NULL, data = NULL) {
   mgres_check(fitme, data)
 
   ### Find the strata included in the coxme fit
-  check_strat <- strsplit(
-    as.character(fitme$formulaList$fixed)[3],
-    "strata"
-  )[[1]]
-
-  if (length(check_strat) > 1) {
-    name <- strsplit(check_strat[2], ")")[[1]][1] |>
-      substring(2)
-
-    strats <- data[, colnames(data) == name]
-  } else {
-    strats <- rep(0, dim(data)[1])
-  }
+  strats <- extract_strats(fitme, data)
   strat_list <- unique(strats)
 
   cumhaz <- rep(0, length(unique(data$subject)))
@@ -129,7 +117,9 @@ mgres.coxph <- function(fitph = NULL, data = NULL) {
 
   mgres_check(fitph, data)
 
-  if (!is.null(fitph$na.action)) data <- data[-fitph$na.action, ]
+  if (!is.null(fitph$na.action)) {
+    data <- data[-fitph$na.action, ]
+  }
   mgres <- rowsum(fitph$residuals, data$subject)
   mgres <- mgres[match(unique(data$subject), rownames(mgres)), ]
 

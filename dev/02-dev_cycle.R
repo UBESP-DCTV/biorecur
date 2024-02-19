@@ -45,4 +45,5 @@ renv::snapshot()
 .use_r("checks")
 .use_r("Beta_to_HR")
 .use_r("na_mean")
+.use_r("extract_strats")
 
