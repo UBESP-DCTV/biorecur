@@ -46,20 +46,11 @@ null_model <- function(
   Call <- match.call()
 
   # Compute martingale residuals and cumulative hazards
-  if ("coxme" %in% class(fitme)) {
-    MG <- MGres(fitme, data)
+  MG <- mgres(fitme, data)
 
-    mresid <- MG$resids
-    cumhaz <- MG$cumhaz
-    frail <- MG$frail
-  }
-  if ("coxph" %in% class(fitme)) {
-    MG <- MGres_ph(fitme, data)
-
-    mresid <- MG$resids
-    cumhaz <- MG$cumhaz
-    frail <- MG$frail
-  }
+  mresid <- MG$resids
+  cumhaz <- MG$cumhaz
+  frail <- MG$frail
 
   ### Check input arguments
   obj.check <- check_input(data, IDs, mresid, range)
