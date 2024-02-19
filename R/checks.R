@@ -78,7 +78,7 @@ check_input <- function(data, IDs, mresid, range) {
 
 
 
-MGres_check <- function(fitme, data) {
+mgres_check <- function(fitme, data) {
   if (is.null(fitme)) {
     stop("no coxme object included")
   }

@@ -7,7 +7,7 @@ mgres <- function(fitme = NULL, data = NULL) {
 
 #' @export
 mgres.coxme <- function(fitme = NULL, data = NULL) {
-  MGres_check(fitme, data)
+  mgres_check(fitme, data)
 
   ### Find the strata included in the coxme fit
   check_strat <- strsplit(
