@@ -81,25 +81,12 @@ SPARE.bed <- function(
 
     indices <- c(((r - 1) * chunksize + 1):min(r * chunksize, size))
 
-    stop("PLEASE BE QUIET!!!!!!!!!!")
-    silent_if_not_verbose <- function(.f, ..., verbose = FALSE) {
-      if (verbose) {
-        .f(...)
-      } else {
-        invisible({
-          res <- suppressMessages(.f(...))
-        })
-      }
-      res
-    }
+    Geno.mtx <- seqminer::readPlinkToMatrixByIndex(
+        bedfile,
+        seq_len(N),
+        indices
+      )
 
-
-    Geno.mtx <- silent_if_not_verbose(
-      seqminer::readPlinkToMatrixByIndex,
-      bedfile,
-      seq_len(N),
-      indices
-    )
     colnames(Geno.mtx) <- bim.data$V2[indices]
 
     outcome <- SPARE(
