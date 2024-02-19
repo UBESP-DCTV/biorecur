@@ -10,5 +10,3 @@ inst/extdata
 .httr-oauth
 .DS_Store
 .quarto
-
-tests/testthat/data_test
