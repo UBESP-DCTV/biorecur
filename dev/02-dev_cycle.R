@@ -37,8 +37,7 @@ renv::snapshot()
 ## `R/functions.R`, you can create other couple of test/function-script
 ## by running the following lines of code as needed.
 
-.use_r("MGres_ph")
-.use_r("MGres")
+.use_r("mgres")
 .use_r("null_model")
 .use_r("SPARE")
 .use_r("SPARE-bgen")
