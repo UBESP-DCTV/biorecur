@@ -3,7 +3,8 @@ SPARE <- function(
   Geno.mtx,
   missing.cutoff = 0.05,
   min.maf = 0.05,
-  p.cutoff = 0.001
+  p.cutoff = 0.001,
+  verbose = TRUE
 ) {
   par.list <- list(
     pwd = getwd(),
@@ -13,10 +14,12 @@ SPARE <- function(
   )
 
   ### Check input
-  check_input_SPARE(obj.null, Geno.mtx, par.list)
+  check_input_spare(obj.null, Geno.mtx, par.list)
 
-  print(paste0("Sample size is ", nrow(Geno.mtx), "."))
-  print(paste0("Number of variants is ", ncol(Geno.mtx), "."))
+  if (verbose) {
+    usethis::ui_info("Sample size is {nrow(Geno.mtx)}.")
+    usethis::ui_info("Number of variants is {ncol(Geno.mtx)}.")
+  }
 
   IDs <- rownames(Geno.mtx)
   SNPs <- colnames(Geno.mtx)
@@ -44,11 +47,12 @@ SPARE <- function(
   # Impute missing values to mean for estimating MAF
   Geno.mtx <- na_mean(Geno.mtx)
 
-  print(paste0(
-    dim(Geno.mtx)[2],
-    "SNPs remaining after call threshold ",
-    Sys.time()
-  ))
+  if (verbose) {
+    usethis::ui_info(stringr::str_c(
+      "{dim(Geno.mtx)[2]} SNPs remaining after call threshold ",
+      "Sys.time()."
+    ))
+  }
 
   G <- Geno.mtx[, which(
     colMeans(Geno.mtx) > 2 * min.maf &
@@ -72,7 +76,9 @@ SPARE <- function(
   ### Perform Linear regression for all SNPs simultaneously using matrix
   ### multiplication
 
-  print(paste0("SPARE started at ", Sys.time()))
+  if (verbose) {
+    usethis::ui_info("SPARE started at {Sys.time()}.")
+  }
 
   ### Define outcome Y and intercept X
   n <- dim(G)[1]
@@ -189,7 +195,9 @@ SPARE <- function(
 
   outcome <- cbind(outcome, SE2, log_HR_approx_SE, log_HR_approx_SE2)
 
-  print(paste0("SPARE completed at ", Sys.time()))
+  if (verbose) {
+    usethis::ui_done("SPARE completed at {Sys.time()}")
+  }
   outcome
 }
 

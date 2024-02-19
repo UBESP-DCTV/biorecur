@@ -8,7 +8,8 @@ SPARE.bed <- function(
   min.maf = 0.05,
   p.cutoff = 0.001,
   memory = 512,
-  maxchunksize = 5e4
+  maxchunksize = 5e4,
+  verbose = TRUE
 ) {
   bim.file <- paste0(bedfile, ".bim")
   fam.file <- paste0(bedfile, ".fam")
@@ -33,18 +34,20 @@ SPARE.bed <- function(
   N <- nrow(fam.data)
   M <- nrow(bim.data)
 
-  print(paste0("Totally ", M, " markers in plink files."))
-  if (!any(obj.null$IDs %in% fam.data$V2)) {
-    stop(paste0(
-      "None of the subject IDs from null model were found ",
-      "in the .fam file"
-    ))
-  } else {
-    print(paste0(
-      "In total, ",
-      length(intersect(obj.null$IDs, fam.data$V2)),
-      " samples found in genotype and phenotype"
-    ))
+  if (verbose) {
+    usethis::ui_info("Totally {M} markers in plink files.")
+    if (!any(obj.null$IDs %in% fam.data$V2)) {
+      usethis::ui_stop(stringr::str_c(
+        "None of the subject IDs from null model were found in the ",
+        ".fam file."
+      ))
+    } else {
+      usethis::ui_info(stringr::str_c(
+        "In total, {length(intersect(obj.null$IDs, fam.data$V2))} ",
+        "samples found in genotype and phenotype."
+      ))
+    }
+
   }
 
   total.samples <- intersect(obj.null$IDs, fam.data$V2)
@@ -62,20 +65,39 @@ SPARE.bed <- function(
   reps <- ceiling(size / chunksize)
   outcome <- NULL
 
-  print(paste0("Split all markers into ", reps, " chunks."))
-  print(paste0(
-    "Each chunk includes less than ", chunksize, " markers."
-  ))
+  if (verbose) {
+    usethis::ui_info(stringr::str_c(
+      "Split all markers into {reps} chunks.",
+      "Each chunk includes less than {chunksize} markers."
+    ))
+  }
 
   outcome <- NULL
 
-  for (r in 1:reps) {
-    print(paste0("Reading chunk ", r, " of ", reps))
+  for (r in seq_len(reps)) {
+    if (verbose) {
+      usethis::ui_todo("Reading chunk {r}/{reps}...")
+    }
+
     indices <- c(((r - 1) * chunksize + 1):min(r * chunksize, size))
 
-    Geno.mtx <- seqminer::readPlinkToMatrixByIndex(
+    stop("PLEASE BE QUIET!!!!!!!!!!")
+    silent_if_not_verbose <- function(.f, ..., verbose = FALSE) {
+      if (verbose) {
+        .f(...)
+      } else {
+        invisible({
+          res <- suppressMessages(.f(...))
+        })
+      }
+      res
+    }
+
+
+    Geno.mtx <- silent_if_not_verbose(
+      seqminer::readPlinkToMatrixByIndex,
       bedfile,
-      1:N,
+      seq_len(N),
       indices
     )
     colnames(Geno.mtx) <- bim.data$V2[indices]
@@ -85,7 +107,8 @@ SPARE.bed <- function(
       Geno.mtx = Geno.mtx,
       missing.cutoff = missing.cutoff,
       min.maf = min.maf,
-      p.cutoff = p.cutoff
+      p.cutoff = p.cutoff,
+      verbose = verbose
     )
     new_outcome <- cbind(
       Chr = bim.data[match(outcome$SNP, bim.data[, 2]), 1],
@@ -103,7 +126,8 @@ SPARE.bed <- function(
         sep = "\t",
         append = FALSE,
         row.names = FALSE,
-        col.names = TRUE
+        col.names = TRUE,
+        verbose = verbose
       )
     } else {
       data.table::fwrite(
@@ -112,7 +136,8 @@ SPARE.bed <- function(
         sep = "\t",
         append = TRUE,
         row.names = FALSE,
-        col.names = FALSE
+        col.names = FALSE,
+        verbose = verbose
       )
     }
   }

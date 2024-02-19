@@ -8,8 +8,28 @@ test_that("extract_strats works", {
     covariate_file  # see test_path("setup.R")
   )
 
-  wrong_db1 <- cbind(
-    covariate_file,
-    strata = rep(1:2, nrow(covariate_file))
+  db_wrong_gt2 <- covariate_file
+  fit_wrong_gt2 <- fitme
+
+  db_wrong_2_multiple <- covariate_file
+  fit_wrong_2_multiple <- fitme
+
+  # tests
+
+  expect_numeric(
+    extract_strats(fitme, covariate_file)
   )
+
+  expect_error(
+    extract_strats(fit_wrong_gt2, db_wrong_gt2),
+    "do not include stratum/covariates with name strata"
+  )
+
+  expect_error(
+    extract_strats(fit_wrong_2_multiple, db_wrong_2_multiple),
+    "please include the strata once in the data frame"
+  )
+
+
+
 })

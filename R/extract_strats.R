@@ -2,8 +2,6 @@ extract_strats <- function(fitme, data) {
 
   strats <- rep(0, dim(data)[1])
 
-  stop("WE NEED TO UNDERSTAND ALL POSSIBLE WAYS TO DEFINE STRATA, WHICH ARE GOOD, WHICH ARE WRONG, AND HOW TO MANAGE THEM, I.E., EXTRACT STRATA OR SIGNAL A PPROPER ERROR.")
-
   check_strat <- strsplit(
     as.character(fitme$formulaList$fixed)[3],
     "strata"

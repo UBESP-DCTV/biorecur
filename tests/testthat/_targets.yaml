@@ -1,4 +1,4 @@
 main:
-  script: C:/Users/Luca/Documents/biorecur/_targets.R
-  store: C:/Users/Luca/Unit of Biostatistics Epidemiology and Public Health/LeSEXP
+  script: C:/Users/corra/Documents/GitHub/ubep/biorecur/_targets.R
+  store: C:/Users/corra/Unit of Biostatistics Epidemiology and Public Health/LeSEXP
     - biorecur/_targets

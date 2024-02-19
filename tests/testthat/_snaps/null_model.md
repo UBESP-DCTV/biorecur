@@ -3,8 +3,9 @@
     Code
       null_model(fitme = fitme, data = db, IDs = db[["subject"]], range = c(-1, 1),
       length.out = 50)
+    Message
+      v Empirical CGF for martingale residuals computed.
     Output
-      [1] "Compute empirical CGF for martingale residuals..."
       $resid
                   1             2             3             4             5 
        0.6014422328  0.7825331051  0.8549169582 -0.9508921693 -0.9508921693 
@@ -1954,8 +1955,9 @@
     Condition
       Warning in `mgres_check.coxph()`:
       subject not included as frailty
+    Message
+      v Empirical CGF for martingale residuals computed.
     Output
-      [1] "Compute empirical CGF for martingale residuals..."
       $resid
                   1             2             3             4             5 
        0.7926231685  0.8859399490  0.9170180733 -0.5187289136 -0.5187289136 

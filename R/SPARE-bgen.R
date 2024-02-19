@@ -1,28 +1,36 @@
-SPARE.bgen <- function(bgenfile, gIDs,
-                       obj.null,
-                       output.file = NULL,
-                       chr = NULL,
-                       missing.cutoff = 0.05,
-                       min.maf = 0.05,
-                       p.cutoff = 0.001,
-                       memory = 512,
-                       maxchunksize = 5e4,
-                       backingdir = "Connections",
-                       backingfile = "backfile") {
+SPARE.bgen <- function(
+  bgenfile, gIDs,
+  obj.null,
+  output.file = NULL,
+  chr = NULL,
+  missing.cutoff = 0.05,
+  min.maf = 0.05,
+  p.cutoff = 0.001,
+  memory = 512,
+  maxchunksize = 5e4,
+  backingdir = "Connections",
+  backingfile = "backfile",
+  verbose = TRUE
+) {
   bgenfile <- paste0(bgenfile, ".bgen")
   bgifile <- paste0(bgenfile, ".bgi")
 
-  if (!file.exists(bgenfile)) stop("Could not find .bgen file")
-  if (!file.exists(bgifile)) stop("Could not find .bgen.bgi file")
-  if (!dir.exists(backingdir)) {
-    print(paste0(
-      "Creating directory ",
-      paste0(getwd(), "/", backingdir),
-      " for the backingfiles of the .bgen file"
-    ))
-    dir.create(backingdir)
+  if (!file.exists(bgenfile)) {
+    usethis::ui_stop("Could not find .bgen file.")
   }
-  if (is.null(output.file)) stop("please provide name of output file")
+  if (!file.exists(bgifile)) {
+    usethis::ui_stop("Could not find .bgen.bgi file")
+  }
+  if (!dir.exists(backingdir)) {
+    dir.create(backingdir)
+    usethis::ui_done(stringr::str_c(
+      "Directory {getwd}/{backingdir} for the backingfiles of the ",
+      ".bgen file created."
+    ))
+  }
+  if (is.null(output.file)) {
+    usethis::ui_stop("please provide name of output file")
+  }
 
   ### Create 'myid' variable for reading .bgen SNPs
   db_con <- RSQLite::dbConnect(RSQLite::SQLite(), bgifile)
@@ -49,14 +57,19 @@ SPARE.bgen <- function(bgenfile, gIDs,
   reps <- ceiling(size / chunksize)
   outcome <- NULL
 
-  print(paste0("Split all markers into ", reps, " chunks."))
-  print(
-    paste0("Each chunk includes less than ", chunksize, " markers.")
-  )
+  if (verbose) {
+    usethis::ui_info("Split all markers into {reps} chunks.")
+    usethis::ui_info(
+      "Each chunk includes less than {chunksize} markers."
+    )
+  }
 
   ### Analyze .bgen files per chunk
-  for (r in 1:reps) {
-    print(paste0("Reading chunk ", r, " of ", reps))
+  for (r in seq_len(reps)) {
+    if (verbose) {
+      usethis::ui_todo("Reading chunk {r}/{reps}")
+    }
+
     indices <- c(((r - 1) * chunksize + 1):min(r * chunksize, size))
 
     if (is.null(chr)) chr <- as.numeric(infos$chromosome[indices[1]])
@@ -82,7 +95,7 @@ SPARE.bgen <- function(bgenfile, gIDs,
     colnames(Geno.mtx) <- infos$myid[indices]
 
     if (length(gIDs) != dim(Geno.mtx)[1]) {
-      stop(
+      usethis::ui_stop(
         "Length of gIDs not equal to number of samples in .bgen file."
       )
     }
@@ -94,7 +107,8 @@ SPARE.bgen <- function(bgenfile, gIDs,
       Geno.mtx = Geno.mtx,
       missing.cutoff = missing.cutoff,
       min.maf = min.maf,
-      p.cutoff = p.cutoff
+      p.cutoff = p.cutoff,
+      verbose = verbose
     )
 
 
@@ -113,7 +127,8 @@ SPARE.bgen <- function(bgenfile, gIDs,
         sep = "\t",
         append = FALSE,
         row.names = FALSE,
-        col.names = TRUE
+        col.names = TRUE,
+        verbose = verbose
       )
     } else {
       data.table::fwrite(
@@ -122,7 +137,8 @@ SPARE.bgen <- function(bgenfile, gIDs,
         sep = "\t",
         append = TRUE,
         row.names = FALSE,
-        col.names = FALSE
+        col.names = FALSE,
+        verbose = verbose
       )
     }
 

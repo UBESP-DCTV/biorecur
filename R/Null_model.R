@@ -40,7 +40,8 @@ null_model <- function(
     IDs = NULL,
     range = c(-20, 20),
     length.out = 50000,
-    seed = 42
+    seed = 42,
+    verbose = TRUE
 ) {
   set.seed(seed)
   Call <- match.call()
@@ -60,7 +61,6 @@ null_model <- function(
   idx1 <- idx0 * max(range) / max(idx0)
 
   cumul <- NULL
-  print("Compute empirical CGF for martingale residuals...")
   c <- 0
   for (i in idx1) {
     c <- c + 1
@@ -74,8 +74,11 @@ null_model <- function(
     K2 <- (M0 * M2 - M1^2) / M0^2
     cumul <- rbind(cumul, c(t, K0, K1, K2))
     if (c %% 5000 == 0) {
-      print(paste0("Complete ", c, "/", length.out, "."))
+      usethis::ui_done("{c}/{length.out}")
     }
+  }
+  if (verbose) {
+    usethis::ui_done("Empirical CGF for martingale residuals computed.")
   }
 
   structure(

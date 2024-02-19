@@ -13,7 +13,8 @@ test_that("spare.bed works", {
     data = covariate_file,
     IDs = covariate_file[["subject"]],
     range = c(-1, 1),
-    length.out = 50
+    length.out = 50,
+    verbose = FALSE
   )
 
   out_file <- fs::file_temp("spare_test", ext = ".txt")
@@ -23,7 +24,8 @@ test_that("spare.bed works", {
     test_path("data_test/omni_mind_geno_clean3_ridotto_prova_07_02_2024"),
     covariate_file[["subject"]],
     nm,
-    out_file
+    out_file,
+    verbose = FALSE
   )
 
 
