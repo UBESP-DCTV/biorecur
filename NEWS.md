@@ -1,7 +1,7 @@
 # biorecur (development version)
 
 ## biorecur 0.0.1
-Fork (copia-incolla) delle funzioni del pacchetto SPARE. Il pacchetto SPARE (https://github.com/JasperHof/SPARE)contiene un singolo file 'functions.R' che contiene tutte le funzioni. Non ha test ma solo un manuale.
+Fork (copia-incolla) delle funzioni del pacchetto SPARE. Il pacchetto SPARE (https://github.com/JasperHof/SPARE) contiene un singolo file 'functions.R' che contiene tutte le funzioni. Non ha test ma solo un manuale.
 
 Abbiamo deciso che la strategia sia quella di 'spacchettare' le singole funzioni nel pacchetto e implementarle singolarmente, ognuna con i suoi singoli test ('refactoring').
 
