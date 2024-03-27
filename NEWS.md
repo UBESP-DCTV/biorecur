@@ -1,7 +1,7 @@
 # biorecur (development version)
 
-* `mgres_check.coxme` non verifica più la classe del primo input in quanto come metodo viene richiamata solo in quel caso.
-* `mgres_check.coxme` non verifica più (inutilmente) l'assenza di input senza un default.
+* `mgres_check.coxme` e `mgres_check.coxph` non verificano più (inutilmente) la classe del primo input in quanto come metodo viene richiamata solo in quel caso.
+* `mgres_check.coxme` e `mgres_check.coxph` non verificano più (inutilmente) l'assenza di input senza un default.
 
 ## biorecur 0.0.1
 

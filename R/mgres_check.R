@@ -17,11 +17,8 @@ mgres_check.coxme <- function(fitme, data) {
 
 #' @export
 mgres_check.coxph <- function(fitme, data) {
-  if (is.null(fitme)) stop("no coxph object included")
-  if (!"coxph" %in% class(fitme)) stop("object not of class coxph")
-  if (is.null(data)) stop("no data object included")
   if (!"subject" %in% colnames(data)) {
-    stop("please include individuals as \"subject\" in dataframe")
+    stop('please include individuals as "subject" in dataframe')
   }
   if (length(grep("subject", attr(fitme$terms, "term.labels"))) < 1) {
     warning("subject not included as frailty")
