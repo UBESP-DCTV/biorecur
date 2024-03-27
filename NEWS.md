@@ -1,19 +1,23 @@
 # biorecur (development version)
 
+* `mgres_check.coxme` non verifica più la classe del primo input in quanto come metodo viene richiamata solo in quel caso.
+* `mgres_check.coxme` non verifica più (inutilmente) l'assenza di input senza un default.
+
 ## biorecur 0.0.1
-Fork (copia-incolla) delle funzioni del pacchetto SPARE. Il pacchetto SPARE (https://github.com/JasperHof/SPARE) contiene un singolo file 'functions.R' che contiene tutte le funzioni. Non ha test ma solo un manuale.
 
-Abbiamo deciso che la strategia sia quella di 'spacchettare' le singole funzioni nel pacchetto e implementarle singolarmente, ognuna con i suoi singoli test ('refactoring').
+* Fork (copia-incolla) delle funzioni del pacchetto SPARE. Il pacchetto SPARE (https://github.com/JasperHof/SPARE) contiene un singolo file 'functions.R' che contiene tutte le funzioni. Non ha test ma solo un manuale.
 
-La prima cosa fatta è stata aggiustare lo stile di coding (spazi, indentazioni, ecc) poi le funzioni singole sono state messe in file singoli.
+* Abbiamo deciso che la strategia sia quella di 'spacchettare' le singole funzioni nel pacchetto e implementarle singolarmente, ognuna con i suoi singoli test ('refactoring').
 
-Sono stati creati (da Daniele Sabbatini) dei file di prova .bim, .bam, .bed per eseguire velocemente i test.
+* La prima cosa fatta è stata aggiustare lo stile di coding (spazi, indentazioni, ecc) poi le funzioni singole sono state messe in file singoli.
+
+* Sono stati creati (da Daniele Sabbatini) dei file di prova .bim, .bam, .bed per eseguire velocemente i test.
 
 ## biorecur 0.1.1.9000
-Sono stati creati i test base (non specifici) per tutte le funzioni e abbiamo cominciato a vedere funzione per funzione di creare un test che abbia senso.
+* Sono stati creati i test base (non specifici) per tutte le funzioni e abbiamo cominciato a vedere funzione per funzione di creare un test che abbia senso.
 
-- Funzione `SPARE-bed.R` e test `test-SPARE-bed.R` completati
-- Funzione `extract-stats.R` e test `extract-strats.R` ci siamo fermati perché non riusciamo a farla andare in errore come specificato dalla funzione originale (vedi https://github.com/UBESP-DCTV/biorecur/issues/2)
+* Funzione `SPARE-bed.R` e test `test-SPARE-bed.R` completati
+* Funzione `extract-stats.R` e test `extract-strats.R` ci siamo fermati perché non riusciamo a farla andare in errore come specificato dalla funzione originale (vedi https://github.com/UBESP-DCTV/biorecur/issues/2)
 
 
 

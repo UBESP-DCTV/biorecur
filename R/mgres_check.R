@@ -6,15 +6,6 @@ mgres_check <- function(fitme, data) {
 
 #' @export
 mgres_check.coxme <- function(fitme, data) {
-  if (is.null(fitme)) {
-    stop("no coxme object included")
-  }
-  if (!inherits(fitme, "coxme")) {
-    stop("object not of class coxme")
-  }
-  if (is.null(data)) {
-    stop("no data object included")
-  }
   if (!inherits(data, "data.frame")) {
     stop("data is not a data frame object")
   }
