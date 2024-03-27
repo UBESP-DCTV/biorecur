@@ -6,12 +6,11 @@ mgres_check <- function(fitme, data) {
 
 #' @export
 mgres_check.coxme <- function(fitme, data) {
-  if (!inherits(data, "data.frame")) {
-    stop("data is not a data frame object")
-  }
+  checkmate::check_data_frame(data)
   if (!"subject" %in% colnames(data)) {
     stop('please include individuals as "subject" in dataframe')
   }
+  invisible(TRUE)
 }
 
 
@@ -23,7 +22,7 @@ mgres_check.coxph <- function(fitme, data) {
   if (length(grep("subject", attr(fitme$terms, "term.labels"))) < 1) {
     warning("subject not included as frailty")
   }
-
+  invisible(TRUE)
 }
 
 mgres_check.default <- function(fitme, data) {
