@@ -8,6 +8,7 @@ Description: What the package does (one paragraph).
 License: file LICENSE
 Imports: 
     bigsnpr,
+    checkmate,
     data.table,
     dplyr,
     fs,
@@ -19,7 +20,6 @@ Imports:
     stringr,
     utils
 Suggests: 
-    checkmate,
     covr,
     coxme,
     crew,
