@@ -1,5 +1,6 @@
 # biorecur (development version)
 
+* `mgres` e i suoi metodi non hanno più `NULL` come default per i propri input (in modo da sfruttare le caratteristiche intrinseche di R per il loro controllo)
 * `mgres_check.coxme` e `mgres_check.coxph` non verificano più (inutilmente) la classe del primo input in quanto come metodo viene richiamata solo in quel caso.
 * `mgres_check.coxme` e `mgres_check.coxph` non verificano più (inutilmente) l'assenza di input senza un default.
 
