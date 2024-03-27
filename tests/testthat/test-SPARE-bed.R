@@ -21,7 +21,9 @@ test_that("spare.bed works", {
 
   # execute
   SPARE.bed(
-    test_path("data_test/omni_mind_geno_clean3_ridotto_prova_07_02_2024"),
+    test_path(
+      "data_test/omni_mind_geno_clean3_ridotto_prova_07_02_2024"
+    ),
     covariate_file[["subject"]],
     nm,
     out_file,
