@@ -1,7 +1,5 @@
 extract_strats <- function(fitme, data) {
 
-  strats <- rep(0, dim(data)[1])
-
   check_strat <- strsplit(
     as.character(fitme$formulaList$fixed)[3],
     "strata"
@@ -11,7 +9,7 @@ extract_strats <- function(fitme, data) {
     stop("do not include stratum/covariates with name strata")
   }
 
-  # In this case, strata have been specified..
+  # In this case, strata have been specified
   if (length(check_strat) == 2) {
     strata_names <- substring(strsplit(check_strat[2], ")")[[1]][1], 2)
 
@@ -24,7 +22,7 @@ extract_strats <- function(fitme, data) {
       # la sua lunghezza è pari al numero di righe del dataset. Se non
       # è così allora vuol dire che ho selezionato più di una colonna
       # e quindi ho messo più di uno strato e non gli piace
-      if (length(strats) != dim(data)[1]) {
+      if (length(strats) != nrow(data)) {
         stop("please include the strata once in the data frame")
       }
     )
