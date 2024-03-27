@@ -1,7 +1,10 @@
 # the following code is running at the beginning of every tests.
 library(checkmate)
 
-covariate_file <- test_path("data_test/dataset_vedovelli_besta_bosisio.txt") |>
+covariate_file <- test_path(
+    "data_test",
+    "dataset_vedovelli_besta_bosisio.txt"
+  ) |>
   readr::read_tsv(show_col_types = FALSE) |>
   dplyr::transmute(
     subject = as.character(IID),

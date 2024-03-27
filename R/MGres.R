@@ -1,12 +1,12 @@
 #' @export
-mgres <- function(fitme = NULL, data = NULL) {
+mgres <- function(fitme, data) {
   UseMethod("mgres", fitme)
 }
 
 
 
 #' @export
-mgres.coxme <- function(fitme = NULL, data = NULL) {
+mgres.coxme <- function(fitme, data) {
   mgres_check(fitme, data)
 
   ### Find the strata included in the coxme fit
@@ -113,7 +113,7 @@ mgres.coxme <- function(fitme = NULL, data = NULL) {
 
 
 #' @export
-mgres.coxph <- function(fitph = NULL, data = NULL) {
+mgres.coxph <- function(fitph, data) {
 
   mgres_check(fitph, data)
 
